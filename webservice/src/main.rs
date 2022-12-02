@@ -2,6 +2,7 @@ mod services;
 mod business_services;
 mod errors;
 mod responders;
+mod models;
 
 use std::env;
 use std::sync::Mutex;
@@ -14,6 +15,7 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     let port = env::var("SERVER_PORT").expect("SERVER_PORT must be set");
     let ip = env::var("SERVER_IP").expect("SERVER_IP must be set");
+
     // create the application state
     let app_state = web::Data::new(AppState {
             counter: Mutex::new(0),
