@@ -41,5 +41,5 @@ pub async fn business_fails() -> impl Responder {
 }
 
 pub async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+    HttpResponse::Ok().body("Hey there I am using route!")
 }

@@ -2,7 +2,6 @@ mod services;
 mod business_services;
 mod errors;
 mod responders;
-mod models;
 
 use std::env;
 use std::sync::Mutex;
