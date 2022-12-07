@@ -47,13 +47,6 @@ pub struct AppError {
 }
 
 impl aw_error::ResponseError for AppError {
-    fn error_response(&self) -> HttpResponse {
-        let body = serde_json::to_string(&self).unwrap();
-        HttpResponse::build(self.status_code())
-            .insert_header(ContentType::json())
-            .body(body)
-    }
-
     fn status_code(&self) -> StatusCode {
         match &self.status_code {
             AppCodeStatus::Ok => StatusCode::OK,
@@ -83,5 +76,12 @@ impl aw_error::ResponseError for AppError {
             AppCodeStatus::Locked => StatusCode::LOCKED,
             AppCodeStatus::InsufficientStorage => StatusCode::INSUFFICIENT_STORAGE,
         }
+    }
+
+    fn error_response(&self) -> HttpResponse {
+        let body = serde_json::to_string(&self).unwrap();
+        HttpResponse::build(self.status_code())
+            .insert_header(ContentType::json())
+            .body(body)
     }
 }

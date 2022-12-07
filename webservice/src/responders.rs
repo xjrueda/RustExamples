@@ -7,16 +7,17 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct ObjectWrapper<T> {
-    object: T
+    response: T
 }
+
 
 impl<T> ObjectWrapper<T> {
     pub fn new(object:T) -> Self {
-        Self{object}
+        Self{ response: object }
     }
     #[allow(dead_code)]
     pub fn object(&self) -> &T {
-        &self.object
+        &self.response
     }
 }
 

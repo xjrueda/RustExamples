@@ -1,6 +1,8 @@
 use std::sync::Mutex;
 use actix_web::{get, post, web, HttpResponse, Responder};
-use crate::business_services::{something_fails, something_ok};
+use serde::Serialize;
+use serde_json::Result;
+use crate::business_services::{query_business_object, something_fails, something_ok};
 
 // This struct represents the app state
 pub struct AppState {
@@ -15,9 +17,37 @@ pub async fn hello(data: web::Data<AppState>) -> impl Responder {
     HttpResponse::Ok().body(resp)
 }
 
+
+#[get("/person/{id}")]
+pub async fn query_service(path :web::Path<u32>) -> impl Responder{
+    let user_id = path.into_inner();
+    let response = query_business_object(user_id);
+    response.unwrap()
+}
+
 #[post("/echo")]
 pub async fn echo(req_body: String) -> HttpResponse {
     HttpResponse::Ok().body(req_body)
+}
+
+#[post("/person")]
+pub async fn person(req_body: String) -> HttpResponse {
+    #[derive(Serialize, serde::Deserialize, Debug)]
+    struct Person {
+        first_name : String,
+        last_name : String,
+    }
+    let person : Result<Person> = serde_json::from_str(&req_body);
+    let msg;
+    match person {
+        Ok(person) => {
+            msg = format!("Person object received {} {}", person.first_name, person.last_name);
+        }
+        Err(e) => {
+            msg = format!("Invalid person {}", e.to_string());
+        }
+    }
+    HttpResponse::Ok().body(msg)
 }
 
 #[get("/counter")]
